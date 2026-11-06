@@ -1,0 +1,6 @@
+{
+  "name": "OmniMath AI - DRF & Aiogram 3 Scientific Calculator",
+  "description": "Next-generation AI-powered scientific calculator combining Django REST Framework math engine with SymPy step-by-step solver and interactive Aiogram 3 Telegram bot with Citizen keypad & OCR.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Django REST Framework Math Engine API
+  backend:
+    build: .
+    container_name: omnimath_drf_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SECRET_KEY=production-secret-omnimath-change-me
+      - DEBUG=True
+      - ALLOWED_HOSTS=*
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  # Aiogram 3 Telegram Bot
+  telegram_bot:
+    build: .
+    container_name: omnimath_aiogram_bot
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - CALCULATOR_API_URL=http://backend:8000/api/v1/calculate/
+      - OCR_API_URL=http://backend:8000/api/v1/ocr/
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - .:/app
+    command: python -m bot.main
